@@ -10,6 +10,7 @@ var initialWeight = 4
 var turn
 var delay = 200
 var auto = false
+var finished
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -62,6 +63,7 @@ function setup() {
     
     document.getElementById("auto").addEventListener("input", function() {
         auto = this.checked
+        autoPlayerMove()
     })
     
     init()
@@ -75,6 +77,7 @@ function reset() {
 }
 
 function init() {
+    finished = false
     turn = "red"
     winner = null
     board = document.getElementById("board")
@@ -99,6 +102,10 @@ function init() {
     }
     
     render()
+    
+    if (auto) {
+        window.setTimeout(autoPlayerMove, delay)
+    }
 }
 
 function render() {
@@ -296,9 +303,13 @@ function clickCell(x, y) {
     
     render()
     checkWinner("red")
-}
+}       
 
 function makePlayerMove(from, to) {
+    if (finished) {
+        return
+    }
+    
     turn = "blue"
     move(from, to)
     selected = null
@@ -307,6 +318,10 @@ function makePlayerMove(from, to) {
 }
 
 function makeEnemyMove() {
+    if (finished) {
+        return
+    }
+    
     turn = "red"
     var possible = moves("blue")
     if (possible.length > 0) {
@@ -314,10 +329,28 @@ function makeEnemyMove() {
         move(choice.from, choice.to)
     }
     checkWinner("blue")
+    
+    if (auto) {
+        window.setTimeout(autoPlayerMove, delay)
+    }
+}
+
+function autoPlayerMove() {
+    if (turn != "red") {
+        return
+    }
+    
+    var possible = moves("red")
+    if (possible.length > 0) {
+        var choice = selectMove("red")
+        makePlayerMove(choice.from, choice.to)
+    }
+    
+    checkWinner("red")
 }
 
 function selectMove(player) {
-    var possible = moves("blue")
+    var possible = moves(player)
     var weights = lookupState(player, serialiseState(state))
     var weighted = possible.map(move => {
                       var serial = serialiseMove(move)
@@ -342,6 +375,7 @@ function checkWinner(previous) {
     
     winner = win(previous)
     if (winner != null) {
+        finished = true
         window.setTimeout(() => finishGame(winner), 500)
     }
 }
