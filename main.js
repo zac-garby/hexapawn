@@ -1,16 +1,26 @@
 var board
 var state
-var width = 5
-var height = 10
+var width = 3
+var height = 3
 var selected = null
 var potentialPlayerMoves = []
 var wins = {red: 0, blue: 0}
 var winner
+var initialWeight = 4
+
+// {<serialState>: {<serialMove>: <goodness>}}
+var blueWeights = {}
+var redWeights = {}
+
+var blueMoves
+var redMoves
 
 function init() {
     winner = null
     board = document.getElementById("board")
     state = []
+    blueMoves = []
+    redMoves = []
     
     for (var y = 0; y < height; y++) {
         var row = []
@@ -66,6 +76,34 @@ function render() {
     document.getElementById("blue-wins").innerHTML = wins.blue
 }
 
+function serialiseMove(move) {
+    return `${move.from.x},${move.from.y},${move.to.x},${move.to.y}`
+}
+
+function serialiseState(state) {
+    return state
+        .flat()
+        .map(x => x == "red" ? "r" : x == "blue" ? "b" : "")
+        .toString()
+}
+
+function lookupState(player, serialState) {
+    var weightSet = player == "red" ? redWeights : blueWeights
+    if (!weightSet.hasOwnProperty(serialState)) {
+        weightSet[serialState] = {}
+    }
+    
+    return weightSet[serialState]
+}
+
+function setWeights(player, serialState, weights) {
+    if (player == "red") {
+        redWeights[serialState] = weights
+    } else if (player == "blue") {
+        blueWeights[serialState] = weights
+    }
+}
+
 // [{from: {x, y}, to: {x, y}}, ...]
 function moves(player) {
     if (player == "red") {
@@ -107,9 +145,7 @@ function moves(player) {
     
     if (player == "red") {
         state.reverse()
-    }
-    
-    if (player == "red") {
+        
         moves = moves.map(move => {
             move.from.y = height - move.from.y - 1
             move.to.y = height - move.to.y - 1
@@ -121,6 +157,17 @@ function moves(player) {
 }
 
 function move(from, to) {
+    var serial = {
+        move: serialiseMove({from: from, to: to}),
+        state: serialiseState(state)
+    }
+    
+    if (state[from.y][from.x] == "red") {
+        redMoves.push(serial)
+    } else if (state[from.y][from.x] == "blue") {
+        blueMoves.push(serial)
+    }
+
     state[to.y][to.x] = state[from.y][from.x]
     state[from.y][from.x] = null
     render()
@@ -215,6 +262,40 @@ function checkWinner(previous) {
 }
 
 function finishGame(winner) {
+    var winningMoves, losingMoves, loser
+    if (winner == "red") {
+        winningMoves = redMoves
+        losingMoves = blueMoves
+        loser = "blue"
+    } else {
+        winningMoves = blueMoves
+        losingMoves = redMoves
+        loser = "red"
+    }    
+
+    for (var move of winningMoves) {
+        var stateWeights = lookupState(winner, move.state)
+        if (!stateWeights.hasOwnProperty(move.move)) {
+            stateWeights[move.move] = initialWeight + 1
+        } else {
+            stateWeights[move.move] += 1
+        }
+        setWeights(winner, move.state, stateWeights)
+    }
+    
+    for (var move of losingMoves) {
+        var stateWeights = lookupState(loser, move.state)
+        if (!stateWeights.hasOwnProperty(move.move)) {
+            stateWeights[move.move] = initialWeight - 1
+        } else if (stateWeights[move.move] > 0) {
+            stateWeights[move.move] -= 1
+        }
+        setWeights(loser, move.state, stateWeights)
+    }
+    
+    redMoves = []
+    blueMoves = []
+    
     wins[winner]++
     init()
 }
