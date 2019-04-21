@@ -244,10 +244,25 @@ function makePlayerMove(from, to) {
 function makeEnemyMove() {
     var possible = moves("blue")
     if (possible.length > 0) {
-        var choice = possible[Math.round(Math.random() * (possible.length - 1))]
+        var choice = selectMove("blue")
         move(choice.from, choice.to)
     }
     checkWinner("blue")
+}
+
+function selectMove(player) {
+    var possible = moves("blue")
+    var weights = lookupState(player, serialiseState(state))
+    var weighted = possible.map(move => {
+                      var serial = serialiseMove(move)
+                      var weight = initialWeight
+                      if (weights.hasOwnProperty(serial)) {
+                          weight = weights[serial]
+                      }
+                      return Array(weight).fill(move)
+                  }).flat()
+
+    return weighted[Math.floor(Math.random() * weighted.length)]
 }
 
 function checkWinner(previous) {
