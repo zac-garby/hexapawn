@@ -9,6 +9,7 @@ var winner
 var initialWeight = 4
 var turn
 var delay = 200
+var auto = false
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -18,6 +19,7 @@ var blueMoves
 var redMoves
 
 function setup() {
+    document.getElementById("auto").checked = auto
     document.getElementById("width").value = width
     document.getElementById("height").value = height
     document.getElementById("delay").value = delay
@@ -56,6 +58,10 @@ function setup() {
         } else {
             document.getElementById("initWeight").value = initialWeight
         }
+    })
+    
+    document.getElementById("auto").addEventListener("input", function() {
+        auto = this.checked
     })
     
     init()
