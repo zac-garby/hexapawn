@@ -11,6 +11,8 @@ var turn
 var delay = 200
 var auto = false
 var finished
+var takeTurns = false
+var toStart = "red"
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -25,6 +27,7 @@ function setup() {
     document.getElementById("height").value = height
     document.getElementById("delay").value = delay
     document.getElementById("initWeight").value = initialWeight
+    document.getElementById("takeTurns").checked = takeTurns
     
     document.getElementById("width").addEventListener("input", function() {
         if (this.value > 0 && this.value <= 10) {
@@ -66,6 +69,10 @@ function setup() {
         autoPlayerMove()
     })
     
+    document.getElementById("takeTurns").addEventListener("input", function() {
+        takeTurns = this.checked
+    })
+    
     init()
 }
 
@@ -78,7 +85,8 @@ function reset() {
 
 function init() {
     finished = false
-    turn = "red"
+    turn = toStart
+    toStart = toStart == "red" ? "blue" : "red"
     winner = null
     board = document.getElementById("board")
     state = []
@@ -103,7 +111,9 @@ function init() {
     
     render()
     
-    if (auto) {
+    if (turn == "blue") {
+        window.setTimeout(makeEnemyMove, delay)
+    } else if (auto) {
         window.setTimeout(autoPlayerMove, delay)
     }
 }
