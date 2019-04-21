@@ -11,12 +11,38 @@
     </head>
     <body onload="init()">
         <div class="container">
-            <table id="board"></table>
-        </div>
-        <div class="scoreboard">
-            <span id="red-wins"></span>
-            :
-            <span id="blue-wins"></span>
+            <div class="left">
+                <table id="board"></table>
+                <div class="scoreboard">
+                    <span id="red-wins"></span>
+                    :
+                    <span id="blue-wins"></span>
+                </div>
+            </div>
+            <div class="middle">
+                <h3>Options</h3>
+                <table id="options">
+                    <tr>
+                        <td><label for="auto" title="Automatically control your player as well as the enemy. This is useful for training the opponent. Each player will use a different intelligence model and will learn differently over time based on randomness and what the other player decides to do.">Auto</label></td>
+                        <td><input type="checkbox" name="auto" id="auto"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="width" title="The width of the board">Width</label></td>
+                        <td><input type="number" name="width" value=3 id="width"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="height" title="The height of the board">Height</label></td>
+                        <td><input type="number" name="height" value=3 id="height"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="delay" title="The number of milliseconds before the player responds to your move. If you're on automatic mode, also controls the delay before your player will respond.">Delay</label></td>
+                        <td><input type="number" name="delay" value=200 id="delay"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right">
+                
+            </div>
         </div>
     </body>
 </html>
