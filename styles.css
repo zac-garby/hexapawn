@@ -75,6 +75,10 @@ div.container > div {
     padding: 20px;
 }
 
+div.left {
+    width: 650px;
+}
+
 span#red-wins {
     color: #FF4141;
 }
