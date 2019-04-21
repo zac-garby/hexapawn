@@ -9,7 +9,7 @@
 
         <title>Hexapawn</title>
     </head>
-    <body onload="init()">
+    <body onload="setup()">
         <div class="container">
             <div class="left">
                 <table id="board"></table>
@@ -23,7 +23,7 @@
                 <h3>Options</h3>
                 <table id="options">
                     <tr>
-                        <td><label for="auto" title="Automatically control your player as well as the enemy. This is useful for training the opponent. Each player will use a different intelligence model and will learn differently over time based on randomness and what the other player decides to do.">Auto</label></td>
+                        <td><label for="auto" title="Automatically control your player as well as the enemy. This is useful for training the opponent. Each player will use a different intelligence model and will learn differently over time based on randomness and what the other player decides to do.">Automatic</label></td>
                         <td><input type="checkbox" name="auto" id="auto"></td>
                     </tr>
                     <tr>
@@ -37,6 +37,10 @@
                     <tr>
                         <td><label for="delay" title="The number of milliseconds before the player responds to your move. If you're on automatic mode, also controls the delay before your player will respond.">Delay</label></td>
                         <td><input type="number" name="delay" value=200 id="delay"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="initWeight" title="The initial weighting of each move. If this is lower, it will take less time for the agent to reach a weight of zero, which says that that particular move is entirely useless. If it's higher, more variation can take place in theory, which might be a good thing.">Initial Weight</label></td>
+                        <td><input type="number" name="initWeight" value=200 id="initWeight"></td>
                     </tr>
                 </table>
             </div>

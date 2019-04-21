@@ -8,6 +8,7 @@ var wins = {red: 0, blue: 0}
 var winner
 var initialWeight = 4
 var turn
+var delay = 200
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -15,6 +16,57 @@ var redWeights = {}
 
 var blueMoves
 var redMoves
+
+function setup() {
+    document.getElementById("width").value = width
+    document.getElementById("height").value = height
+    document.getElementById("delay").value = delay
+    document.getElementById("initWeight").value = initialWeight
+    
+    document.getElementById("width").addEventListener("input", function() {
+        if (this.value > 0 && this.value <= 10) {
+            width = this.value
+            reset()
+        } else {
+            document.getElementById("width").value = width
+        }
+    })
+    
+    document.getElementById("height").addEventListener("input", function() {
+        if (this.value > 0 && this.value <= 10) {
+            height = this.value
+            reset()
+        } else {
+            document.getElementById("height").value = height
+        }
+    })
+    
+    document.getElementById("delay").addEventListener("input", function() {
+        if (this.value >= 0) {
+            delay = this.value
+        } else {
+            document.getElementById("delay").value = delay
+        }
+    })
+    
+    document.getElementById("initWeight").addEventListener("input", function() {
+        if (this.value > 0) {
+            initialWeight = this.value
+            reset()
+        } else {
+            document.getElementById("initWeight").value = initialWeight
+        }
+    })
+    
+    init()
+}
+
+function reset() {
+    selected = null
+    potentialPlayerMoves = []
+    wins = {red: 0, blue: 0}
+    init()
+}
 
 function init() {
     turn = "red"
@@ -245,7 +297,7 @@ function makePlayerMove(from, to) {
     move(from, to)
     selected = null
     
-    window.setTimeout(makeEnemyMove, 200)
+    window.setTimeout(makeEnemyMove, delay)
 }
 
 function makeEnemyMove() {
