@@ -7,6 +7,7 @@ var potentialPlayerMoves = []
 var wins = {red: 0, blue: 0}
 var winner
 var initialWeight = 4
+var turn = "red"
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -208,6 +209,10 @@ function win(previous) {
 }
 
 function clickCell(x, y) {
+    if (turn == "blue") {
+        return
+    }
+    
     var moved = false
     
     if (selected != null) {
@@ -235,6 +240,7 @@ function clickCell(x, y) {
 }
 
 function makePlayerMove(from, to) {
+    turn = "blue"
     move(from, to)
     selected = null
     
@@ -242,6 +248,7 @@ function makePlayerMove(from, to) {
 }
 
 function makeEnemyMove() {
+    turn = "red"
     var possible = moves("blue")
     if (possible.length > 0) {
         var choice = selectMove("blue")
