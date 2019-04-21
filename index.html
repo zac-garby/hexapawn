@@ -21,7 +21,7 @@
             </div>
             <div class="middle">
                 <h3>Options</h3>
-                <table id="options">
+                <table class="options">
                     <tr>
                         <td><label for="auto" title="Automatically control your player as well as the enemy. This is useful for training the opponent. Each player will use a different intelligence model and will learn differently over time based on randomness and what the other player decides to do.">Automatic</label></td>
                         <td><input type="checkbox" name="auto" id="auto"></td>
@@ -54,10 +54,17 @@
                         <td><label for="initWeight" title="The initial weighting of each move. If this is lower, it will take less time for the agent to reach a weight of zero, which says that that particular move is entirely useless. If it's higher, more variation can take place in theory, which might be a good thing.">Initial Weight</label></td>
                         <td><input type="number" name="initWeight" value=200 id="initWeight"></td>
                     </tr>
+                    <tr>
+                        <td><label for="reward" title="The increase in weight of a winning strategy.">Reward</label></td>
+                        <td><input type="number" name="reward" value=1 id="reward"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="punishment" title="The increase in weight of a losing strategy.">Punishment</label></td>
+                        <td><input type="number" name="punishment" value=1 id="punishment"></td>
+                    </tr>
                 </table>
             </div>
             <div class="right">
-                
             </div>
         </div>
     </body>

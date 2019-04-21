@@ -15,6 +15,8 @@ var takeTurns = false
 var toStart = "red"
 var roundDelay = 500
 var shouldRender = true
+var reward = 1
+var punishment = -1
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -32,6 +34,8 @@ function setup() {
     document.getElementById("takeTurns").checked = takeTurns
     document.getElementById("roundDelay").value = roundDelay
     document.getElementById("shouldRender").checked = shouldRender
+    document.getElementById("reward").value = reward
+    document.getElementById("punishment").value = punishment
     
     document.getElementById("width").addEventListener("input", function() {
         var value = Number.parseFloat(this.value)
@@ -69,6 +73,16 @@ function setup() {
         } else {
             document.getElementById("roundDelay").value = delay
         }
+    })
+    
+    document.getElementById("reward").addEventListener("input", function() {
+        var value = Number.parseFloat(this.value)
+        reward = value
+    })
+    
+    document.getElementById("punishment").addEventListener("input", function() {
+        var value = Number.parseFloat(this.value)
+        punishment = value
     })
     
     document.getElementById("initWeight").addEventListener("input", function() {
@@ -115,6 +129,8 @@ function init() {
     state = []
     blueMoves = []
     redMoves = []
+    redWeights = {}
+    blueWeights = {}
     
     for (var y = 0; y < height; y++) {
         var row = []
@@ -430,9 +446,9 @@ function finishGame(winner) {
     for (var move of winningMoves) {
         var stateWeights = lookupState(winner, move.state)
         if (!stateWeights.hasOwnProperty(move.move)) {
-            stateWeights[move.move] = initialWeight + 1
+            stateWeights[move.move] = Math.max(0, initialWeight + reward)
         } else {
-            stateWeights[move.move] += 1
+            stateWeights[move.move] = Math.max(0, stateWeights[move.move] + reward)
         }
         setWeights(winner, move.state, stateWeights)
     }
@@ -440,9 +456,9 @@ function finishGame(winner) {
     for (var move of losingMoves) {
         var stateWeights = lookupState(loser, move.state)
         if (!stateWeights.hasOwnProperty(move.move)) {
-            stateWeights[move.move] = initialWeight
-        } else if (stateWeights[move.move] > 0) {
-            stateWeights[move.move] -= 1
+            stateWeights[move.move] = Math.max(0, initialWeight + punishment)
+        } else {
+            stateWeights[move.move] = Math.max(0, stateWeights[move.move] + punishment)
         }
         setWeights(loser, move.state, stateWeights)
     }

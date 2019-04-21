@@ -98,16 +98,16 @@ h3 {
     color: grey;
 }
 
-table#options td {
+table.options td {
     text-align: left;
     vertical-align: bottom;
     padding-bottom: 10px;
 }
 
-table#options td:first-child {
+table.options td:first-child {
     text-align: right;
 }
 
-table#options input[type=number] {
+table.options input[type=number] {
     width: 50px;
 }
