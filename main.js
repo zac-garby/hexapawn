@@ -7,7 +7,7 @@ var potentialPlayerMoves = []
 var wins = {red: 0, blue: 0}
 var winner
 var initialWeight = 4
-var turn = "red"
+var turn
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -17,6 +17,7 @@ var blueMoves
 var redMoves
 
 function init() {
+    turn = "red"
     winner = null
     board = document.getElementById("board")
     state = []
