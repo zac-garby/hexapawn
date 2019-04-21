@@ -14,6 +14,7 @@ var finished
 var takeTurns = false
 var toStart = "red"
 var roundDelay = 500
+var shouldRender = true
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -30,6 +31,7 @@ function setup() {
     document.getElementById("initWeight").value = initialWeight
     document.getElementById("takeTurns").checked = takeTurns
     document.getElementById("roundDelay").value = roundDelay
+    document.getElementById("shouldRender").checked = shouldRender
     
     document.getElementById("width").addEventListener("input", function() {
         if (this.value > 0 && this.value <= 10) {
@@ -83,6 +85,10 @@ function setup() {
         takeTurns = this.checked
     })
     
+    document.getElementById("shouldRender").addEventListener("input", function() {
+        shouldRender = this.checked
+    })
+    
     init()
 }
 
@@ -131,38 +137,40 @@ function init() {
 }
 
 function render() {
-    board.innerHTML = ""
+    if (shouldRender) {
+        board.innerHTML = ""
     
-    for (var y = 0; y < height; y++) {
-        var row = document.createElement("tr")
+        for (var y = 0; y < height; y++) {
+            var row = document.createElement("tr")
         
-        for (var x = 0; x < width; x++) {
-            var cell = document.createElement("td")
-            var colour = document.createElement("div")
+            for (var x = 0; x < width; x++) {
+                var cell = document.createElement("td")
+                var colour = document.createElement("div")
 
-            cell.className = state[y][x]
-            cell.id = x + "," + y
+                cell.className = state[y][x]
+                cell.id = x + "," + y
             
-            if (selected != null && x == selected.x && y == selected.y) {
-                cell.classList.add("selected")
+                if (selected != null && x == selected.x && y == selected.y) {
+                    cell.classList.add("selected")
+                }
+            
+                cell.appendChild(colour)
+                row.appendChild(cell)
+            
+                const ycor = y
+                const xcor = x
+            
+                cell.addEventListener("mousedown", function() {
+                    clickCell(xcor, ycor)
+                })
             }
-            
-            cell.appendChild(colour)
-            row.appendChild(cell)
-            
-            const ycor = y
-            const xcor = x
-            
-            cell.addEventListener("mousedown", function() {
-                clickCell(xcor, ycor)
-            })
-        }
         
-        board.appendChild(row)
-    }
+            board.appendChild(row)
+        }
     
-    document.getElementById("red-wins").innerHTML = wins.red
-    document.getElementById("blue-wins").innerHTML = wins.blue
+        document.getElementById("red-wins").innerHTML = wins.red
+        document.getElementById("blue-wins").innerHTML = wins.blue
+    }
 }
 
 function serialiseMove(move) {
@@ -265,31 +273,31 @@ function move(from, to) {
 function win(previous) {
     for (var x = 0; x < width; x++) {
         if (state[0][x] == "red") {
-            console.log("red reached blue's side so red wins")
+            if (shouldRender) { console.log("red reached blue's side so red wins") }
             return "red"
         }
         
         if (state[height - 1][x] == "blue") {
-            console.log("blue reached red's side so blue wins")
+            if (shouldRender) { console.log("blue reached red's side so blue wins") }
             return "blue"
         }
     }
     
     var flat = state.flat()
     if (!flat.some(x => x == "red")) {
-        console.log("no red pieces left so blue wins")
+        if (shouldRender) { console.log("no red pieces left so blue wins") }
         return "blue"
     } else if (!flat.some(x => x == "blue")) {
-        console.log("no blue pieces left so red wins")
+        if (shouldRender) { console.log("no blue pieces left so red wins") }
         return "red"
     }
     
     var opposer = previous == "red" ? "blue" : "red"
     if (moves(opposer).length == 0) {
-        console.log("no moves left for", opposer, "so", previous, "wins")
+        if (shouldRender) { console.log("no moves left for", opposer, "so", previous, "wins") }
         return previous
     } else if (moves(previous).length == 0) {
-        console.log("no moves left for", previous, "so", opposer, "wins")
+        if (shouldRender) { console.log("no moves left for", previous, "so", opposer, "wins") }
         return opposer
     }
     
