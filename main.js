@@ -13,6 +13,7 @@ var auto = false
 var finished
 var takeTurns = false
 var toStart = "red"
+var roundDelay = 500
 
 // {<serialState>: {<serialMove>: <goodness>}}
 var blueWeights = {}
@@ -28,6 +29,7 @@ function setup() {
     document.getElementById("delay").value = delay
     document.getElementById("initWeight").value = initialWeight
     document.getElementById("takeTurns").checked = takeTurns
+    document.getElementById("roundDelay").value = roundDelay
     
     document.getElementById("width").addEventListener("input", function() {
         if (this.value > 0 && this.value <= 10) {
@@ -52,6 +54,14 @@ function setup() {
             delay = this.value
         } else {
             document.getElementById("delay").value = delay
+        }
+    })
+    
+    document.getElementById("roundDelay").addEventListener("input", function() {
+        if (this.value >= 0) {
+            roundDelay = this.value
+        } else {
+            document.getElementById("roundDelay").value = delay
         }
     })
     
@@ -386,7 +396,7 @@ function checkWinner(previous) {
     winner = win(previous)
     if (winner != null) {
         finished = true
-        window.setTimeout(() => finishGame(winner), 500)
+        window.setTimeout(() => finishGame(winner), roundDelay)
     }
 }
 
