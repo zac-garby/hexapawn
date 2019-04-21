@@ -96,7 +96,9 @@ function reset() {
 function init() {
     finished = false
     turn = toStart
-    toStart = toStart == "red" ? "blue" : "red"
+    if (takeTurns) {
+        toStart = toStart == "red" ? "blue" : "red"
+    }
     winner = null
     board = document.getElementById("board")
     state = []
