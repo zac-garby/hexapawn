@@ -34,8 +34,9 @@ function setup() {
     document.getElementById("shouldRender").checked = shouldRender
     
     document.getElementById("width").addEventListener("input", function() {
-        if (this.value > 0 && this.value <= 10) {
-            width = this.value
+        var value = Number.parseFloat(this.value)
+        if (value > 0 && value <= 10) {
+            width = value
             reset()
         } else {
             document.getElementById("width").value = width
@@ -43,8 +44,9 @@ function setup() {
     })
     
     document.getElementById("height").addEventListener("input", function() {
-        if (this.value > 0 && this.value <= 10) {
-            height = this.value
+        var value = Number.parseFloat(this.value)
+        if (value > 0 && value <= 10) {
+            height = value
             reset()
         } else {
             document.getElementById("height").value = height
@@ -52,24 +54,27 @@ function setup() {
     })
     
     document.getElementById("delay").addEventListener("input", function() {
-        if (this.value >= 0) {
-            delay = this.value
+        var value = Number.parseFloat(this.value)
+        if (value >= 0) {
+            delay = value
         } else {
             document.getElementById("delay").value = delay
         }
     })
     
     document.getElementById("roundDelay").addEventListener("input", function() {
-        if (this.value >= 0) {
-            roundDelay = this.value
+        var value = Number.parseFloat(this.value)
+        if (value >= 0) {
+            roundDelay = value
         } else {
             document.getElementById("roundDelay").value = delay
         }
     })
     
     document.getElementById("initWeight").addEventListener("input", function() {
-        if (this.value > 0) {
-            initialWeight = this.value
+        var value = Number.parseFloat(this.value)
+        if (value > 0) {
+            initialWeight = value
             reset()
         } else {
             document.getElementById("initWeight").value = initialWeight
@@ -435,7 +440,7 @@ function finishGame(winner) {
     for (var move of losingMoves) {
         var stateWeights = lookupState(loser, move.state)
         if (!stateWeights.hasOwnProperty(move.move)) {
-            stateWeights[move.move] = initialWeight - 1
+            stateWeights[move.move] = initialWeight
         } else if (stateWeights[move.move] > 0) {
             stateWeights[move.move] -= 1
         }
