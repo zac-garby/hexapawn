@@ -322,6 +322,10 @@ function selectMove(player) {
                       return Array(weight).fill(move)
                   }).flat()
 
+    if (weighted.length == 0) {
+        weighted = possible
+    }
+
     return weighted[Math.floor(Math.random() * weighted.length)]
 }
 
