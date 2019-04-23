@@ -26,6 +26,9 @@ var blueMoves
 var redMoves
 
 function setup() {
+    redWeights = {}
+    blueWeights = {}
+    
     document.getElementById("auto").checked = auto
     document.getElementById("width").value = width
     document.getElementById("height").value = height
@@ -116,6 +119,9 @@ function reset() {
     potentialPlayerMoves = []
     wins = {red: 0, blue: 0}
     init()
+    
+    redWeights = {}
+    blueWeights = {}
 }
 
 function init() {
@@ -129,8 +135,6 @@ function init() {
     state = []
     blueMoves = []
     redMoves = []
-    redWeights = {}
-    blueWeights = {}
     
     for (var y = 0; y < height; y++) {
         var row = []
